@@ -1,0 +1,10 @@
+<!--This Page Should Only be accessible to admin users-->
+<h1>All Users</h1>
+
+<ul>
+<% @users.each do |user| %>
+	<li><a href="/users/<%=user.id%>"><%= user.first_name%></a></li>
+	<%end%>
+</ul>
+
+<button><%= link_to "Add User", new_user_path(@user)%> </button>

@@ -1,0 +1,7 @@
+<h1>Your Handles</h1>
+
+<ul>
+	<% @handles.each do |handle| %>
+	<li><a href="/users/<%=handle.user_id%>/handles/<%=handle.id%>"><%= handle.handle %></a></li>
+	<%end%>
+</ul>

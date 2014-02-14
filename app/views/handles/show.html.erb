@@ -1,0 +1,26 @@
+<h1><%=@handle.handle%></h1>
+
+<h3>Instagram User ID: <%=@insta_user_id%></h3>
+<h3>Number Photos: <%=@photos%></h3>
+<h3>Number of People Following: <%=@follows%></h3>
+<h3>Followed By: <%=@followed_by.to_i%></h3>
+<h3>Bio: <%=@bio%></h3>
+<h3>Website: <%=@website%></h3>
+<h3>Full Name: <%=@full_name%></h3>
+<img src="<%=@profile_picture%>">
+
+<h3>Who You've Tagged:
+	<ul>
+		<%@top_tagged.each do |user|%>
+		<li><%= user %></li>
+		<%end%>
+
+	</ul>
+</h3>
+<h3>Total Likes: <%=@total_likes%></h3>
+<h3>Average Likes/Photo: <%=@average_likes_per_photo%></h3>
+<h3><%=((@total_likes)/(@followed_by)).round(2)%> Likes per Follower</h3>
+<h3>Unique Likers: <%=@unique_likers%></h3>
+<h3>Percentage of Followers Who Liked: <%=@percentage_of_followers_who_liked%>%</h3>
+
+
