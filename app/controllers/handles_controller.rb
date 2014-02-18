@@ -45,10 +45,17 @@ class HandlesController < ApplicationController
 		@full_name = @profile_attributes["full_name"]
 		@top_tagged = top_tagged(@insta_user_id)
 		@total_likes = likes(@insta_user_id)
+		@total_comments = comments(@insta_user_id)
+		@average_comments_photo = ((@total_comments)/10.0)
 		@average_likes_per_photo = ((@total_likes)/10)
 		@unique_likers = all_likers(@insta_user_id).uniq.count
 		@percentage_of_followers_who_liked = ((@unique_likers)/(@followed_by) * 100).round(2)
 		@image_urls = last_10_urls(@insta_user_id)
+		@filters = filter(@insta_user_id)
+		@type = type(@insta_user_id)
+		@top_likers = top_likers(@insta_user_id)
+		@timeframe = (timeframe(@insta_user_id)).round(2)
+		@velocity = (@timeframe/10).round(2)
 
 		#people you follow
 		#@people_you_follow = find_people_you_follow(@insta_user_id)
@@ -95,11 +102,11 @@ class HandlesController < ApplicationController
 	end
 
 	def find_people_you_follow(user_id)
-		client_id = "93ddd852b046406a98628885d2802599"
-		client_secret = "bfaba04a15f04d37a946d4ae14d6dec9"
+		#client_id = "93ddd852b046406a98628885d2802599"
+		#client_secret = "bfaba04a15f04d37a946d4ae14d6dec9"
 
 		#need to figure out how to deal with pagination
-		search_url = "https://api.instagram.com/v1/users/#{user_id}/follows?client_id=#{client_id}&count=100"
+		search_url = "https://api.instagram.com/v1/users/#{user_id}/follows?client_id=#{INSTAGRAM_CLIENT_ID}&count=100"
 
 		from_instagram = HTTParty.get(search_url)
 
@@ -117,10 +124,9 @@ class HandlesController < ApplicationController
 	end
 
 	def find_insta_user_id(username)
-		client_id = "93ddd852b046406a98628885d2802599"
-		client_secret = "bfaba04a15f04d37a946d4ae14d6dec9"
-
-		search_url = "https://api.instagram.com/v1/users/search?q=#{username}&client_id=#{client_id}"
+		#client_id = "93ddd852b046406a98628885d2802599"
+		#client_secret = "bfaba04a15f04d37a946d4ae14d6dec9"
+		search_url = "https://api.instagram.com/v1/users/search?q=#{username}&client_id=#{INSTAGRAM_CLIENT_ID}"
 
 		from_instagram = HTTParty.get(search_url)
 
@@ -151,10 +157,10 @@ class HandlesController < ApplicationController
 	end
 
 	def retrieve_last_10_photos(user_id)
-		client_id = "93ddd852b046406a98628885d2802599"
-		client_secret = "bfaba04a15f04d37a946d4ae14d6dec9"
+		#client_id = "93ddd852b046406a98628885d2802599"
+		#client_secret = "bfaba04a15f04d37a946d4ae14d6dec9"
 
-		search_url = "https://api.instagram.com/v1/users/#{user_id}/media/recent/?client_id=#{client_id}&count=10"
+		search_url = "https://api.instagram.com/v1/users/#{user_id}/media/recent/?client_id=#{INSTAGRAM_CLIENT_ID}&count=10"
 
 		from_instagram = HTTParty.get(search_url)
 
@@ -175,11 +181,6 @@ class HandlesController < ApplicationController
 		return array_of_image_urls
 	end
 
-	def sort_by_frequency
-	    histogram = inject(Hash.new(0)) { |hash, x| hash[x] += 1; hash}
-	    sort_by { |x| [histogram[x], x] }
-	end
-
 	#returns all the users' tagged in the last 10 photos you've taken
 	def top_tagged(user_id)
 		from_instagram = retrieve_last_10_photos(user_id)
@@ -198,20 +199,27 @@ class HandlesController < ApplicationController
 			end
 			i = i + 1
 		end
+		
+		if array
 
-		b = Hash.new(0)
-		array.each do |v|
-			b[v] += 1
+			b = Hash.new(0)
+			array.each do |v|
+				b[v] += 1
+			end
+
+			sorted_b = b.sort_by {|k, v| v}
+			sorted_b = sorted_b.reverse
+
+			sorted_b.map do |k, v|
+				puts "#{k}: #{v} tags"
+			end
+
+			return sorted_b
+
+		else 
+			return "No users tagged"
 		end
 
-		sorted_b = b.sort_by {|k, v| v}
-		sorted_b = sorted_b.reverse
-
-		sorted_b.map do |k, v|
-			puts "#{k}: #{v} tags"
-		end
-
-		return sorted_b
 	end
 
 	#return a sum of all likes from the users' last 10 photos
@@ -242,12 +250,11 @@ class HandlesController < ApplicationController
 			i = i + 1
 		end
 
-		client_id = "93ddd852b046406a98628885d2802599"
-		client_secret = "bfaba04a15f04d37a946d4ae14d6dec9"
-
+		#client_id = "93ddd852b046406a98628885d2802599"
+		#client_secret = "bfaba04a15f04d37a946d4ae14d6dec9"
 
 		likers_results = media_ids.map do |media_id|
-			search_url = "https://api.instagram.com/v1/media/#{media_id}/likes?client_id=#{client_id}"
+			search_url = "https://api.instagram.com/v1/media/#{media_id}/likes?client_id=#{INSTAGRAM_CLIENT_ID}"
 			likers = HTTParty.get(search_url)
 		end
 
@@ -269,8 +276,110 @@ class HandlesController < ApplicationController
 		return all_likers
 	end
 
+	def top_likers(user_id)
+		all_likers = all_likers(user_id)
+
+		b = Hash.new(0)
+		all_likers.each do |v|
+			b[v] += 1
+		end
+
+		sorted_b = b.sort_by {|k, v| v}
+		sorted_b = sorted_b.reverse
+
+		return sorted_b
+
+	end
+
 	def filter(user_id)
 		from_instagram = retrieve_last_10_photos(user_id)
+		array_of_filters = []
+		i = 0
+
+		while i < 10
+			filter = from_instagram["data"][i]["filter"]
+			array_of_filters = array_of_filters.push(filter)
+			i = i + 1
+		end
+
+		b = Hash.new(0)
+		array_of_filters.each do |v|
+			b[v] += 1
+		end
+
+		sorted_b = b.sort_by {|k, v| v}
+		sorted_b = sorted_b.reverse
+
+		sorted_b.map do |k, v|
+			puts "#{k}: #{v}"
+		end
+
+		return sorted_b
+
+	end
+
+	def type(user_id)
+		from_instagram = retrieve_last_10_photos(user_id)
+		array_of_types = []
+		i = 0
+
+		while i < 10
+			type = from_instagram["data"][i]["type"]
+			array_of_types = array_of_types.push(type)
+			i = i + 1
+		end
+
+		b = Hash.new(0)
+		array_of_types.each do |v|
+			b[v] += 1
+		end
+
+		sorted_b = b.sort_by {|k, v| v}
+		sorted_b = sorted_b.reverse
+
+		return sorted_b
+
+	end
+
+	def timeframe(user_id)
+		from_instagram = retrieve_last_10_photos(user_id)
+		most_recent_photo = (from_instagram["data"][0]["created_time"]).to_i
+		oldest_photo = (from_instagram["data"][9]["created_time"]).to_i
+
+		most_recent_photo_time = Time.at(most_recent_photo)
+		oldest_photo_time = Time.at(oldest_photo)
+
+		difference_in_time = (most_recent_photo_time - oldest_photo_time)
+
+		#time in minutes
+		minutes = (difference_in_time/60)
+
+		#time in hours
+		hours = (minutes/60)
+
+		#time in days
+		days = (hours/24)
+
+		return days
+
+
+	end
+
+	def comments(user_id)
+		from_instagram = retrieve_last_10_photos(user_id)
+		number_of_photos = from_instagram["data"].size
+
+		all_comments = Array.new
+		i = 0
+		while i < number_of_photos
+			comments = from_instagram["data"][i]["comments"]["count"]
+			all_comments.push(comments)
+			i = i + 1
+		end
+
+		all_comments = all_comments.reduce(:+)
+
+		return all_comments
 
 	end
 

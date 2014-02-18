@@ -1,27 +1,65 @@
 <h1><%=@handle.handle%></h1>
 
-<h3>Instagram User ID: <%=@insta_user_id%></h3>
-<h3>Number Photos: <%=@photos%></h3>
-<h3>Number of People Following: <%=@follows%></h3>
-<h3>Followed By: <%=@followed_by.to_i%></h3>
+<h2>Profile Details</h2>
+<img id="profile" src="<%=@profile_picture%>">
+<h3>Full Name: <%=@full_name%></h3>
 <h3>Bio: <%=@bio%></h3>
 <h3>Website: <%=@website%></h3>
-<h3>Full Name: <%=@full_name%></h3>
-<img id="profile" src="<%=@profile_picture%>">
 
-<h3>Who You've Tagged:
-	<ul>
-		<%@top_tagged.each do |user|%>
-		<li><%= user %></li>
+<h3>Total Number of Photos: <%=@photos%></h3>
+<h3>Number of People <%=@handle.handle%> Follows: <%=@follows%></h3>
+<h3>Followed By: <%=@followed_by.to_i%></h3>
+
+<h2>Stats on <%=@handle.handle%>'s Last 10 Posts</h2>
+<h3>Top Tagged Friends:
+
+	<% if @top_tagged != "No users tagged"%>
+		<ol>
+			<%@top_tagged.each do |user_count_pair|%>
+			<li><%= user_count_pair[0]%>: <%= user_count_pair[1]%> photos</li>
+			<%end%>
+
+		</ol>
+	<%else%>
+		No friends tagged!
+	<%end%>
+</h3>
+<h3>Top Filters: 
+	<ol>
+		<%@filters.each do |filter_count_pair| %>
+		<li><%=filter_count_pair[0]%>: <%=filter_count_pair[1]%> photos</li>
 		<%end%>
-
-	</ul>
+	</ol>
 </h3>
 <h3>Total Likes: <%=@total_likes%></h3>
 <h3>Average Likes/Photo: <%=@average_likes_per_photo%></h3>
+<h3>Total Comments: <%=@total_comments%></h3>
+<h3>Average Comments/Photo: <%=@average_comments_photo%></h3>
 <h3><%=((@total_likes)/(@followed_by)).round(2)%> Likes per Follower</h3>
 <h3>Unique Likers: <%=@unique_likers%></h3>
 <h3>Percentage of Followers Who Liked: <%=@percentage_of_followers_who_liked%>%</h3>
+<h3>Type of Media:
+	<ul>
+		<%@type.each do |type| %>
+		<li><%= type[1]%> <%=type[0]%>s</li>
+		<%end%>
+	</ul>
+</h3>
+
+<h3>Velocity: <br>
+	Over the past <%=@timeframe%> days, <%=@handle.handle%> has posted 1 photo every <%=@velocity%> days</h3>
+
+<!--Top 10 Likers-->
+<h3>Top 10 Fans:
+	<ol>
+		<% i = 0 %>
+		<% while i < 10 %>
+			<li><%=@top_likers[i][0]%>: <%=@top_likers[i][1]%></li>
+			<% i = i + 1 %>
+		<% end %>
+	</ol>
+</h3>
+
 <h3>Most Recent Images:<br>
 	<%@image_urls.each do |url| %>
 	<img src="<%=url%>" width="200px">
