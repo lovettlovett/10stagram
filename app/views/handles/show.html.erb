@@ -1,37 +1,75 @@
 <h1><%=@handle.handle%></h1>
 
-<h2>Profile Details</h2>
-<div><img id="profile" src="<%=@profile_picture%>"></div>
-<h3>Full Name: 
-	<% if @full_name == ""%>
-		n/a
-	<%else%>
-		<%=@full_name%>
-	<%end%>
-</h3>
+<h2><em>Profile Details</em></h2>
 
-<h3>Bio: 
-	<% if @bio == ""%>
-		n/a
-	<%else%>
-		<%=@bio%>
-	<%end%>
-</h3>
+<table>
+	<tr>
+		<td>
+			<img id="profile" src="<%=@profile_picture%>">
+		</td>
+		<td width="30px">
+		</td>
+		<td>
+			<table>
+				<tr>
+					<td>
+						<b>Full Name:</b>
+							<% if @full_name == ""%>
+								n/a
+							<%else%>
+								<%=@full_name%>
+							<%end%>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<b>Bio: </b>
+							<% if @bio == ""%>
+								n/a
+							<%else%>
+								<%=@bio%>
+							<%end%>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<b>Website:</b> 
+							<% if @website == ""%>
+								n/a
+							<% else %>	
+								<%=@website%>
+							<%end%>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						
+							<b>Total Number of Photos:</b> <%=@photos%>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						
+							<b>Number of People <%=@handle.handle%> Follows:</b> <%=@follows%>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						
+							<b>Followed By:</b> <%=@followed_by.to_i%>
+					</td>
+				</tr>
 
-<h3>Website: 
-	<% if @website == ""%>
-		n/a
-	<% else %>	
-		<%=@website%>
-	<%end%>
-	</h3>
+			</table>
+		</td>
+	</tr>
+</table>
 
-<h3>Total Number of Photos: <%=@photos%></h3>
-<h3>Number of People <%=@handle.handle%> Follows: <%=@follows%></h3>
-<h3>Followed By: <%=@followed_by.to_i%></h3>
+<h2><em>Stats on <%=@handle.handle%>'s Last 10 Posts</em></h2>
 
-<h2>Stats on <%=@handle.handle%>'s Last 10 Posts</h2>
-<h3>Top Tagged Friends:
+<h3>Velocity:</h3>
+	Over the past <%=@timeframe%> days, <%=@handle.handle%> has posted once every <%=@velocity%> days
+<h3>Top Tagged Friends:</h3>
 
 	<% if @top_tagged != "No users tagged"%>
 		<ol>
@@ -43,46 +81,47 @@
 	<%else%>
 		No friends tagged!
 	<%end%>
-</h3>
-<h3>Top Filters: 
+
+<h3>Top Filters:</h3>
 	<ol>
 		<%@filters.each do |filter_count_pair| %>
 		<li><%=filter_count_pair[0]%>: <%=filter_count_pair[1]%> photos</li>
 		<%end%>
 	</ol>
-</h3>
-<h3>Total Likes: <%=@total_likes%></h3>
-<h3>Average Likes/Photo: <%=@average_likes_per_photo%></h3>
-<h3>Total Comments: <%=@total_comments%></h3>
-<h3>Average Comments/Photo: <%=@average_comments_photo%></h3>
-<h3>Unique Likers: <%=@unique_likers%></h3>
-<h3>Percentage of Followers Who Liked: <%=@percentage_of_followers_who_liked%>%</h3>
-<h3>Type of Media:
-	<ul>
-		<%@type.each do |type| %>
-		<li><%= type[1]%> <%=type[0]%>s</li>
-		<%end%>
-	</ul>
-</h3>
-
-<h3>Velocity: <br>
-	Over the past <%=@timeframe%> days, <%=@handle.handle%> has posted 1 photo every <%=@velocity%> days</h3>
 
 <!--Top 10 Likers-->
-<h3>Top Fans:
+<h3>Top Fans:</h3>
 	<ol>
-
-		
 		<% i = 0 %>
 		<% while i < @number_of_photos %>
 			<% if @top_likers[i] %>
-			<li><%=@top_likers[i][0]%>: <%=@top_likers[i][1]%></li>
+			<li><%=@top_likers[i][0]%>: <%=@top_likers[i][1]%> likes</li>
 			<% end %>
 			<% i = i + 1 %>
 		<% end %>
 	</ol>
 
-</h3>
+<h3>Likes Stats</h3>
+<ul>
+	<li>Total Likes: <%=@total_likes%></li>
+	<li>Average Likes/Photo: <%=@average_likes_per_photo%></li>
+	<li>Unique Likers: <%=@unique_likers%></li>
+	<li>Percentage of Followers Who Liked: <%=@percentage_of_followers_who_liked%>%</li>
+</ul>
+
+
+<h3>Comments Stats</h3>
+<ul>
+	<li>Total Comments: <%=@total_comments%></li>
+	<li>Average Comments/Photo: <%=@average_comments_photo%></li>
+</ul>
+
+<h3>Type of Media:</h3>
+	<ul>
+		<%@type.each do |type| %>
+		<li><%= type[1]%> <%=type[0]%>s</li>
+		<%end%>
+	</ul>
 
 <h3>Most Recent Images:<br>
 	<%@image_urls.each do |url| %>

@@ -11,8 +11,38 @@
  *= require_self
  *= require_tree .
  */
+
+body {
+	background-color: #eeeeee;
+	font-family: 'Istok Web', sans-serif;
+	color: #262626;
+}
+
+#header_image {
+	float: right;
+}
+
+header {
+	background-color: #eeeeee;
+	font-family: 'Istok Web', sans-serif;
+	float: right;
+	text-align: center;
+}
+
 #profile {
 	border-style:solid;
+	border-color:#8f3582;
 	border-width:5px;
 	border-radius: 100px;
+}
+
+button {
+	width: 125px;
+	background-color: #0898bb;
+	padding:15px;
+	font-size:18px;
+	color: #ffffff;
+	border-radius:4px;
+	text-decoration:none;
+	text-transform: none;
 }

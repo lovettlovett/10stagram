@@ -9,13 +9,15 @@
 <body>
 
 <header>
-<%= link_to "Home", root_path %>
+<a href="/"><img id="header_image" src="http://i.imgur.com/hES45VG.png"></a><br>
+<h4><%= link_to "Home", root_path %> •
 
 <% if logged_in? %>
-  <p><%= link_to("Log Out #{current_user.first_name}!", "/session", method: "delete") %></p>  
+	<%= link_to "Your Account", user_path(current_user.id) %> •
+  <%= link_to("Log Out, #{current_user.first_name}!", "/session", method: "delete") %> 
 <% else %>
-  <p><%= link_to("Please Log In!","/login") %></p>
-<% end %>
+  <%= link_to("Please Log In!","/login") %>
+<% end %></h4>
 
 </header>
 
