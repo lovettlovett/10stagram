@@ -14,6 +14,7 @@ class HandlesController < ApplicationController
 	def create
 		@user = User.find_by_id(params[:user_id])
 		@user_handle = find_insta_user_id(params[:handle])
+
 		if profile_attributes(@user_handle)
 			@handle = Handle.create(handle: params[:handle], user_id: params[:user_id])
 			redirect_to(user_handles_path)
@@ -56,6 +57,7 @@ class HandlesController < ApplicationController
 		@top_likers = top_likers(@insta_user_id)
 		@timeframe = (timeframe(@insta_user_id)).round(2)
 		@velocity = (@timeframe/10).round(2)
+		@number_of_photos = number_of_photos(@insta_user_id)
 
 		#people you follow
 		#@people_you_follow = find_people_you_follow(@insta_user_id)
@@ -64,10 +66,8 @@ class HandlesController < ApplicationController
 	end
 
 	def find_insta_user_id(username)
-		client_id = "93ddd852b046406a98628885d2802599"
-		client_secret = "bfaba04a15f04d37a946d4ae14d6dec9"
-
-		search_url = "https://api.instagram.com/v1/users/search?q=#{username}&client_id=#{client_id}"
+	
+		search_url = "https://api.instagram.com/v1/users/search?q=#{username}&client_id=#{INSTAGRAM_CLIENT_ID}"
 
 		from_instagram = HTTParty.get(search_url)
 
@@ -76,10 +76,8 @@ class HandlesController < ApplicationController
 	end
 
 	def profile_stats(user_id)
-		client_id = "93ddd852b046406a98628885d2802599"
-		client_secret = "bfaba04a15f04d37a946d4ae14d6dec9"
 
-		search_url = "https://api.instagram.com/v1/users/#{user_id}?client_id=#{client_id}"
+		search_url = "https://api.instagram.com/v1/users/#{user_id}?client_id=#{INSTAGRAM_CLIENT_ID}"
 
 		from_instagram = HTTParty.get(search_url)
 		
@@ -89,10 +87,8 @@ class HandlesController < ApplicationController
 	end
 
 	def profile_attributes(user_id)
-		client_id = "93ddd852b046406a98628885d2802599"
-		client_secret = "bfaba04a15f04d37a946d4ae14d6dec9"
 
-		search_url = "https://api.instagram.com/v1/users/#{user_id}?client_id=#{client_id}"
+		search_url = "https://api.instagram.com/v1/users/#{user_id}?client_id=#{INSTAGRAM_CLIENT_ID}"
 
 		from_instagram = HTTParty.get(search_url)
 		
@@ -102,8 +98,6 @@ class HandlesController < ApplicationController
 	end
 
 	def find_people_you_follow(user_id)
-		#client_id = "93ddd852b046406a98628885d2802599"
-		#client_secret = "bfaba04a15f04d37a946d4ae14d6dec9"
 
 		#need to figure out how to deal with pagination
 		search_url = "https://api.instagram.com/v1/users/#{user_id}/follows?client_id=#{INSTAGRAM_CLIENT_ID}&count=100"
@@ -124,8 +118,6 @@ class HandlesController < ApplicationController
 	end
 
 	def find_insta_user_id(username)
-		#client_id = "93ddd852b046406a98628885d2802599"
-		#client_secret = "bfaba04a15f04d37a946d4ae14d6dec9"
 		search_url = "https://api.instagram.com/v1/users/search?q=#{username}&client_id=#{INSTAGRAM_CLIENT_ID}"
 
 		from_instagram = HTTParty.get(search_url)
@@ -157,15 +149,19 @@ class HandlesController < ApplicationController
 	end
 
 	def retrieve_last_10_photos(user_id)
-		#client_id = "93ddd852b046406a98628885d2802599"
-		#client_secret = "bfaba04a15f04d37a946d4ae14d6dec9"
-
 		search_url = "https://api.instagram.com/v1/users/#{user_id}/media/recent/?client_id=#{INSTAGRAM_CLIENT_ID}&count=10"
 
 		from_instagram = HTTParty.get(search_url)
 
 		return from_instagram
 
+	end
+
+	def number_of_photos(user_id)
+		from_instagram = retrieve_last_10_photos(user_id)
+		number_of_photos = from_instagram["data"].size
+
+		return number_of_photos
 	end
 
 	def last_10_urls(user_id)
@@ -254,9 +250,6 @@ class HandlesController < ApplicationController
 			media_ids.push(type)
 			i = i + 1
 		end
-
-		#client_id = "93ddd852b046406a98628885d2802599"
-		#client_secret = "bfaba04a15f04d37a946d4ae14d6dec9"
 
 		likers_results = media_ids.map do |media_id|
 			search_url = "https://api.instagram.com/v1/media/#{media_id}/likes?client_id=#{INSTAGRAM_CLIENT_ID}"

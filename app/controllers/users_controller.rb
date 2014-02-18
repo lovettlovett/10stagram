@@ -55,5 +55,16 @@ class UsersController < ApplicationController
 		params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation)
 	end
 
+	def authenticate
+		unless logged_in?
+			redirect_to login_path
+		end
+	end
+
+	def authorize
+		unless current_user == @user
+			redirect_to login_path
+		end
+	end
 
 end

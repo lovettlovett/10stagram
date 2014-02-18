@@ -2,11 +2,11 @@
 
 <button><%= link_to "Update Profile", edit_user_path(@user) %></button>
 
-<button>
-	<label>
-	Delete Account
-	<% form_tag user_path(@user), method: "delete" do%>
-	<%= submit_tag("Delete My Account") %>
-	<%end%>
-	</label>
+<button><%= link_to "Add Handle", new_user_handle_path(@user) %>
 </button>
+
+<button><%= link_to "View Handles", user_handles_path(@user) %></button>
+
+<%= form_tag user_path(@user), method: "delete" do %>
+<%= submit_tag("Delete My Account") %>
+<%end%>

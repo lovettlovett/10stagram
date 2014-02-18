@@ -71,8 +71,10 @@
 <!--Top 10 Likers-->
 <h3>Top Fans:
 	<ol>
+
+		
 		<% i = 0 %>
-		<% while i < 10 || i < (@top_likers.size - 1) %>
+		<% while i < @number_of_photos %>
 			<% if @top_likers[i] %>
 			<li><%=@top_likers[i][0]%>: <%=@top_likers[i][1]%></li>
 			<% end %>

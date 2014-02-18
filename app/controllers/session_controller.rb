@@ -7,7 +7,7 @@ class SessionController < ApplicationController
 		user = User.find_by(email: params[:email])
 
 		if user && (user.authenticate(params[:password]))
-			session[:user_id] = user.user_id
+			session[:user_id] = user.id
 			redirect_to(user_path(user))
 		else
 			@message = "This email and password combination does not exist!"
