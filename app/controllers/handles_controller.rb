@@ -13,8 +13,13 @@ class HandlesController < ApplicationController
 
 	def create
 		@user = User.find_by_id(params[:user_id])
-		@handle = Handle.create(handle: params[:handle], user_id: params[:user_id])
-		redirect_to(user_handles_path)
+		@user_handle = find_insta_user_id(params[:handle])
+		if profile_attributes(@user_handle)
+			@handle = Handle.create(handle: params[:handle], user_id: params[:user_id])
+			redirect_to(user_handles_path)
+		else 
+			redirect_to(new_user_handle_path, notice: "Please enter a public Instagram handle.")
+		end
 	end
 
 	def show
