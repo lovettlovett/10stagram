@@ -7,7 +7,7 @@
 <h3>Bio: <%=@bio%></h3>
 <h3>Website: <%=@website%></h3>
 <h3>Full Name: <%=@full_name%></h3>
-<img src="<%=@profile_picture%>">
+<img id="profile" src="<%=@profile_picture%>">
 
 <h3>Who You've Tagged:
 	<ul>
@@ -22,5 +22,11 @@
 <h3><%=((@total_likes)/(@followed_by)).round(2)%> Likes per Follower</h3>
 <h3>Unique Likers: <%=@unique_likers%></h3>
 <h3>Percentage of Followers Who Liked: <%=@percentage_of_followers_who_liked%>%</h3>
+<h3>Most Recent Images:<br>
+	<%@image_urls.each do |url| %>
+	<img src="<%=url%>" width="200px">
+	<%end%>
+</h3>
+
 
 

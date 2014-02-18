@@ -1,4 +1,5 @@
 class HandlesController < ApplicationController
+	#include Api
 
 	def index
 		@handles = Handle.where(user_id: params[:user_id])
@@ -22,6 +23,9 @@ class HandlesController < ApplicationController
 		#take an instagram handle and return the insta user_id
 		@insta_user_id = find_insta_user_id(@handle.handle)
 
+		# @insta_user_id = Api.new
+		# @insta_user_id = @insta_user_id.find_insta_user_id(username)
+
 		#get basic stats about that user_id: # of photos, # of followers, # of following
 		@profile_stats = profile_stats(@insta_user_id)
 		@photos = @profile_stats["media"]
@@ -39,6 +43,7 @@ class HandlesController < ApplicationController
 		@average_likes_per_photo = ((@total_likes)/10)
 		@unique_likers = all_likers(@insta_user_id).uniq.count
 		@percentage_of_followers_who_liked = ((@unique_likers)/(@followed_by) * 100).round(2)
+		@image_urls = last_10_urls(@insta_user_id)
 
 		#people you follow
 		#@people_you_follow = find_people_you_follow(@insta_user_id)
@@ -47,7 +52,7 @@ class HandlesController < ApplicationController
 	end
 
 	def find_insta_user_id(username)
-		client_id = "8d636c456fe14143b2a220b9ab059ea2"
+		client_id = "93ddd852b046406a98628885d2802599"
 		client_secret = "bfaba04a15f04d37a946d4ae14d6dec9"
 
 		search_url = "https://api.instagram.com/v1/users/search?q=#{username}&client_id=#{client_id}"
@@ -59,7 +64,7 @@ class HandlesController < ApplicationController
 	end
 
 	def profile_stats(user_id)
-		client_id = "8d636c456fe14143b2a220b9ab059ea2"
+		client_id = "93ddd852b046406a98628885d2802599"
 		client_secret = "bfaba04a15f04d37a946d4ae14d6dec9"
 
 		search_url = "https://api.instagram.com/v1/users/#{user_id}?client_id=#{client_id}"
@@ -72,7 +77,7 @@ class HandlesController < ApplicationController
 	end
 
 	def profile_attributes(user_id)
-		client_id = "8d636c456fe14143b2a220b9ab059ea2"
+		client_id = "93ddd852b046406a98628885d2802599"
 		client_secret = "bfaba04a15f04d37a946d4ae14d6dec9"
 
 		search_url = "https://api.instagram.com/v1/users/#{user_id}?client_id=#{client_id}"
@@ -85,7 +90,7 @@ class HandlesController < ApplicationController
 	end
 
 	def find_people_you_follow(user_id)
-		client_id = "8d636c456fe14143b2a220b9ab059ea2"
+		client_id = "93ddd852b046406a98628885d2802599"
 		client_secret = "bfaba04a15f04d37a946d4ae14d6dec9"
 
 		#need to figure out how to deal with pagination
@@ -107,7 +112,7 @@ class HandlesController < ApplicationController
 	end
 
 	def find_insta_user_id(username)
-		client_id = "8d636c456fe14143b2a220b9ab059ea2"
+		client_id = "93ddd852b046406a98628885d2802599"
 		client_secret = "bfaba04a15f04d37a946d4ae14d6dec9"
 
 		search_url = "https://api.instagram.com/v1/users/search?q=#{username}&client_id=#{client_id}"
@@ -141,7 +146,7 @@ class HandlesController < ApplicationController
 	end
 
 	def retrieve_last_10_photos(user_id)
-		client_id = "8d636c456fe14143b2a220b9ab059ea2"
+		client_id = "93ddd852b046406a98628885d2802599"
 		client_secret = "bfaba04a15f04d37a946d4ae14d6dec9"
 
 		search_url = "https://api.instagram.com/v1/users/#{user_id}/media/recent/?client_id=#{client_id}&count=10"
@@ -150,6 +155,19 @@ class HandlesController < ApplicationController
 
 		return from_instagram
 
+	end
+
+	def last_10_urls(user_id)
+		from_instagram = retrieve_last_10_photos(user_id)
+		array_of_image_urls = []
+		i = 0
+		while i < 10
+			standard_resolution_url = from_instagram["data"][i]["images"]["standard_resolution"]["url"]
+			array_of_image_urls = array_of_image_urls.push(standard_resolution_url)
+			i = i + 1
+		end
+
+		return array_of_image_urls
 	end
 
 	def sort_by_frequency
@@ -176,7 +194,19 @@ class HandlesController < ApplicationController
 			i = i + 1
 		end
 
-		return array
+		b = Hash.new(0)
+		array.each do |v|
+			b[v] += 1
+		end
+
+		sorted_b = b.sort_by {|k, v| v}
+		sorted_b = sorted_b.reverse
+
+		sorted_b.map do |k, v|
+			puts "#{k}: #{v} tags"
+		end
+
+		return sorted_b
 	end
 
 	#return a sum of all likes from the users' last 10 photos
@@ -207,7 +237,7 @@ class HandlesController < ApplicationController
 			i = i + 1
 		end
 
-		client_id = "8d636c456fe14143b2a220b9ab059ea2"
+		client_id = "93ddd852b046406a98628885d2802599"
 		client_secret = "bfaba04a15f04d37a946d4ae14d6dec9"
 
 
@@ -232,6 +262,11 @@ class HandlesController < ApplicationController
 		end
 
 		return all_likers
+	end
+
+	def filter(user_id)
+		from_instagram = retrieve_last_10_photos(user_id)
+
 	end
 
 end
