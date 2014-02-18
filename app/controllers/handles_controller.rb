@@ -47,7 +47,7 @@ class HandlesController < ApplicationController
 		@total_likes = likes(@insta_user_id)
 		@total_comments = comments(@insta_user_id)
 		@average_comments_photo = ((@total_comments)/10.0)
-		@average_likes_per_photo = ((@total_likes)/10)
+		@average_likes_per_photo = ((@total_likes)/10.0)
 		@unique_likers = all_likers(@insta_user_id).uniq.count
 		@percentage_of_followers_who_liked = ((@unique_likers)/(@followed_by) * 100).round(2)
 		@image_urls = last_10_urls(@insta_user_id)
@@ -171,8 +171,10 @@ class HandlesController < ApplicationController
 	def last_10_urls(user_id)
 		from_instagram = retrieve_last_10_photos(user_id)
 		array_of_image_urls = []
+		number_of_photos = from_instagram["data"].size
+
 		i = 0
-		while i < 10
+		while i < number_of_photos
 			standard_resolution_url = from_instagram["data"][i]["images"]["standard_resolution"]["url"]
 			array_of_image_urls = array_of_image_urls.push(standard_resolution_url)
 			i = i + 1
@@ -185,10 +187,12 @@ class HandlesController < ApplicationController
 	def top_tagged(user_id)
 		from_instagram = retrieve_last_10_photos(user_id)
 
+		number_of_photos = from_instagram["data"].size
+
 		all_people_you_tag = []
 		users_per_photo = []
 		i = 0
-		while i < 10
+		while i < number_of_photos
 			x = 0
 			people_per_photo = from_instagram["data"][i]["users_in_photo"].size
 			people_you_tag = from_instagram["data"][i]["users_in_photo"]
@@ -199,7 +203,7 @@ class HandlesController < ApplicationController
 			end
 			i = i + 1
 		end
-		
+
 		if array
 
 			b = Hash.new(0)
@@ -242,9 +246,10 @@ class HandlesController < ApplicationController
 	#a method to find all the unique users who have liked one of your photos
 	def all_likers(user_id)
 		from_instagram = retrieve_last_10_photos(user_id)
+		number_of_photos = from_instagram["data"].size
 		media_ids = []
 		i = 0
-		while i < 10 
+		while i < number_of_photos 
 			type = from_instagram["data"][i]["id"]
 			media_ids.push(type)
 			i = i + 1
@@ -260,9 +265,10 @@ class HandlesController < ApplicationController
 
 		all_likers = Array.new
 		likers_per_photo = Array.new
-
+	
+		# changed this to number_of_photos, make sure that still works
 		i = 0
-		while i < 10
+		while i < number_of_photos
 			x = 0
 			likes_per_photo = likers_results[i]["data"].size
 			while x < likes_per_photo
@@ -293,10 +299,11 @@ class HandlesController < ApplicationController
 
 	def filter(user_id)
 		from_instagram = retrieve_last_10_photos(user_id)
+		number_of_photos = from_instagram["data"].size
 		array_of_filters = []
 		i = 0
 
-		while i < 10
+		while i < number_of_photos
 			filter = from_instagram["data"][i]["filter"]
 			array_of_filters = array_of_filters.push(filter)
 			i = i + 1
@@ -320,10 +327,12 @@ class HandlesController < ApplicationController
 
 	def type(user_id)
 		from_instagram = retrieve_last_10_photos(user_id)
+		number_of_photos = from_instagram["data"].size
+
 		array_of_types = []
 		i = 0
 
-		while i < 10
+		while i < number_of_photos
 			type = from_instagram["data"][i]["type"]
 			array_of_types = array_of_types.push(type)
 			i = i + 1
@@ -343,8 +352,12 @@ class HandlesController < ApplicationController
 
 	def timeframe(user_id)
 		from_instagram = retrieve_last_10_photos(user_id)
+		number_of_photos = from_instagram["data"].size.to_i
+		#binding.pry
 		most_recent_photo = (from_instagram["data"][0]["created_time"]).to_i
-		oldest_photo = (from_instagram["data"][9]["created_time"]).to_i
+		oldest_photo = (from_instagram["data"][(number_of_photos - 1)]["created_time"]).to_i
+
+
 
 		most_recent_photo_time = Time.at(most_recent_photo)
 		oldest_photo_time = Time.at(oldest_photo)

@@ -1,10 +1,30 @@
 <h1><%=@handle.handle%></h1>
 
 <h2>Profile Details</h2>
-<img id="profile" src="<%=@profile_picture%>">
-<h3>Full Name: <%=@full_name%></h3>
-<h3>Bio: <%=@bio%></h3>
-<h3>Website: <%=@website%></h3>
+<div><img id="profile" src="<%=@profile_picture%>"></div>
+<h3>Full Name: 
+	<% if @full_name == ""%>
+		n/a
+	<%else%>
+		<%=@full_name%>
+	<%end%>
+</h3>
+
+<h3>Bio: 
+	<% if @bio == ""%>
+		n/a
+	<%else%>
+		<%=@bio%>
+	<%end%>
+</h3>
+
+<h3>Website: 
+	<% if @website == ""%>
+		n/a
+	<% else %>	
+		<%=@website%>
+	<%end%>
+	</h3>
 
 <h3>Total Number of Photos: <%=@photos%></h3>
 <h3>Number of People <%=@handle.handle%> Follows: <%=@follows%></h3>
@@ -35,7 +55,6 @@
 <h3>Average Likes/Photo: <%=@average_likes_per_photo%></h3>
 <h3>Total Comments: <%=@total_comments%></h3>
 <h3>Average Comments/Photo: <%=@average_comments_photo%></h3>
-<h3><%=((@total_likes)/(@followed_by)).round(2)%> Likes per Follower</h3>
 <h3>Unique Likers: <%=@unique_likers%></h3>
 <h3>Percentage of Followers Who Liked: <%=@percentage_of_followers_who_liked%>%</h3>
 <h3>Type of Media:
@@ -50,14 +69,17 @@
 	Over the past <%=@timeframe%> days, <%=@handle.handle%> has posted 1 photo every <%=@velocity%> days</h3>
 
 <!--Top 10 Likers-->
-<h3>Top 10 Fans:
+<h3>Top Fans:
 	<ol>
 		<% i = 0 %>
-		<% while i < 10 %>
+		<% while i < 10 || i < (@top_likers.size - 1) %>
+			<% if @top_likers[i] %>
 			<li><%=@top_likers[i][0]%>: <%=@top_likers[i][1]%></li>
+			<% end %>
 			<% i = i + 1 %>
 		<% end %>
 	</ol>
+
 </h3>
 
 <h3>Most Recent Images:<br>
