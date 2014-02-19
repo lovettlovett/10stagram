@@ -1,7 +1,9 @@
 InstarankApp::Application.routes.draw do
 
   resources :users do
-    resources :handles
+    resources :handles do
+    	resources :battles
+    end
   end
 
   get "/login", to: "session#new"
