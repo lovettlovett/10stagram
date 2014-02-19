@@ -1,1 +1,281 @@
-<h1>Show</h1>
+<h1><%=@handle.handle%> vs. <%=@battle.versus_handle%></h1>
+
+<table>
+	<tr>
+	<!--Picture-->
+		<td>
+			<img id="profile" src="<%=@handle_profile_pic%>">
+		</td>
+		<!--Spacer-->
+		<td width="30px">
+		</td>
+		<!--Bio Details-->
+		<td>
+			<table>
+				<tr>
+					<td>
+						<b>Full Name:</b>
+						<%=@handle_full_name%>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<b>Bio:</b>
+						<%=@handle_bio%>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<b>Website:</b>
+						<%=@handle_website%>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<b>Total Number of Photos:</b>
+						<%=@handle_photos%>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<b>Following:</b>
+						<%=@handle_follows%>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<b>Followed By:</b>
+						<%=@handle_followed_by.round(0)%>
+					</td>
+				</tr>
+			</table>
+		</td>
+		<!--Middle Section Spacer-->
+		<td width="50px">
+		</td>
+		<!--Bio Details-->
+		<td>
+				<table>
+				<tr>
+					<td>
+						<b>Full Name:</b>
+						<%=@versus_full_name%>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<b>Bio:</b>
+						<%=@versus_bio%>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<b>Website:</b>
+						<%=@versus_website%>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<b>Total Number of Photos:</b>
+						<%=@versus_photos%>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<b>Following:</b>
+						<%=@versus_follows%>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<b>Followed By:</b>
+						<%=@versus_followed_by.round(0)%>
+					</td>
+				</tr>
+			</table>
+		</td>
+		<!--Spacer-->
+		<td width="30px">
+		</td>
+		<!--Picture-->
+		<td>
+			<img id="profile" src="<%=@versus_profile_pic%>">
+		</td>
+	</tr>
+	<!--row spacer-->
+	<tr>
+		<td colspan="7" height="20px">
+		</td>
+	</tr>
+	<!--velocity-->
+	<tr>
+		<td colspan="3">
+			<b>Velocity:</b>
+			Over the past <b><%=@handle_timeframe%></b> days, 1 post every every <b><%=@handle_velocity%></b> days.
+		</td>
+		<!--Spacer-->
+		<td width="50px">
+		</td>
+		<td colspan="3">
+			<b>Velocity:</b>
+			Over the past <b><%=@versus_timeframe%></b> days, 1 post every <b><%=@versus_velocity%></b> days.
+		</td>
+	</tr>
+	<!--row spacer-->
+	<tr>
+		<td colspan="7" height="20px">
+		</td>
+	</tr>
+	<!--Total Likes-->
+	<tr>
+		<td colspan="3">
+			<b>Total Likes:</b>
+			<%=@handle_total_likes%>
+		</td>
+		<!--Spacer-->
+		<td width="50px">
+		</td>
+		<td colspan="3">
+			<b>Total Likes:</b>
+			<%=@versus_total_likes%>
+		</td>
+	</tr>
+	<!--Unique Likers-->
+	<tr>
+		<td colspan="3">
+			<b>Unique Likers:</b>
+			<%=@handle_unique_likers%>
+		</td>
+		<!--Spacer-->
+		<td width="50px">
+		</td>
+		<td colspan="3">
+			<b>Unique Likers:</b>
+			<%=@versus_unique_likers%>
+		</td>
+	</tr>
+	<!--Average Likes/Photo-->
+	<tr>
+		<td colspan="3">
+			<b>Average Likes/Photo:</b>
+			<%=@handle_average_likes_per_photo%>
+		</td>
+		<!--Spacer-->
+		<td width="50px">
+		</td>
+		<td colspan="3">
+			<b>Average Likes/Photo:</b>
+			<%=@versus_average_likes_per_photo%>
+		</td>
+	</tr>
+	<!--Percentage of Followers Who Liked-->
+	<tr>
+		<td colspan="3">
+			<b>Percentage of Followers Who Liked:</b>
+			<%=@handle_percentage_of_followers_who_liked%>%
+		</td>
+		<!--Spacer-->
+		<td width="50px">
+		</td>
+		<td colspan="3">
+			<b>Percentage of Followers Who Liked:</b>
+			<%=@versus_percentage_of_followers_who_liked%>%
+		</td>
+	</tr>
+	<!--row spacer-->
+	<tr>
+		<td colspan="7" height="20px">
+		</td>
+	</tr>
+	<!--Total Comments-->
+	<tr>
+		<td colspan="3">
+			<b>Total Comments:</b>
+			<%=@handle_total_comments%>
+		</td>
+		<!--Spacer-->
+		<td width="50px">
+		</td>
+		<td colspan="3">
+			<b>Total Comments:</b>
+			<%=@versus_total_comments%>
+		</td>
+	</tr>
+	<!--Average Comments/Photo-->
+	<tr>
+		<td colspan="3">
+			<b>Average Comments/Photo:</b>
+			<%=@handle_average_comments_per_photo%>
+		</td>
+		<!--Spacer-->
+		<td width="50px">
+		</td>
+		<td colspan="3">
+			<b>Average Comments/Photo:</b>
+			<%=@versus_average_comments_per_photo%>
+		</td>
+	</tr>
+	<!--row spacer-->
+	<tr>
+		<td colspan="7" height="20px">
+		</td>
+	</tr>
+	<!--Top Three Fans-->
+	<tr>
+		<td colspan="3">
+			<b>Top Three Fans:</b>
+			<ol>
+			<%if @handle_top_likers[0]%>
+				<li><%= @handle_top_likers[0][0]%>: <%=@handle_top_likers[0][1]%> likes</li>
+			<%end%>
+			<%if @handle_top_likers[1]%>
+				<li><%= @handle_top_likers[1][0]%>: <%=@handle_top_likers[1][1]%> likes</li>
+			<%end%>
+			<%if @handle_top_likers[2]%>
+				<li><%= @handle_top_likers[2][0]%>: <%=@handle_top_likers[2][1]%> likes</li>
+			<%end%>
+			</ol>
+		</td>
+		<!--Spacer-->
+		<td width="50px">
+		</td>
+		<td colspan="3">
+			<b>Top Three Fans:</b>
+			<ol>
+			<%if @versus_top_likers[0]%>
+				<li><%= @versus_top_likers[0][0]%>: <%=@versus_top_likers[0][1]%> likes</li>
+			<%end%>
+			<%if @versus_top_likers[1]%>
+				<li><%= @versus_top_likers[1][0]%>: <%=@versus_top_likers[1][1]%> likes</li>
+			<%end%>
+			<%if @versus_top_likers[2]%>
+				<li><%= @versus_top_likers[2][0]%>: <%=@versus_top_likers[2][1]%> likes</li>
+			<%end%>
+			</ol>
+		</td>
+	</tr>
+	<!--row spacer-->
+	<tr>
+		<td colspan="7" height="20px">
+		</td>
+	</tr>
+	<!--Most Recent Photos-->
+		<tr>
+		<td colspan="3">
+			<b>Most Recent Posts:</b><br>
+			<%@handle_image_urls.each do |url|%>
+			<img src="<%=url%>" width="75px">
+			<%end%>
+		</td>
+		<!--Spacer-->
+		<td width="50px">
+		</td>
+		<td colspan="3">
+			<b>Most Recent Posts:</b><br>
+			<%@versus_image_urls.each do |url|%>
+			<img src="<%=url%>" width="75px">
+			<%end%>
+		</td>
+	</tr>
+
+</table>

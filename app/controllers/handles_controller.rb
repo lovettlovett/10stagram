@@ -47,8 +47,6 @@ class HandlesController < ApplicationController
 		@top_tagged = top_tagged(@insta_user_id)
 		@total_likes = likes(@insta_user_id)
 		@total_comments = comments(@insta_user_id)
-		@average_comments_photo = ((@total_comments)/10.0)
-		@average_likes_per_photo = ((@total_likes)/10.0)
 		@unique_likers = all_likers(@insta_user_id).uniq.count
 		@percentage_of_followers_who_liked = ((@unique_likers)/(@followed_by) * 100).round(2)
 		@image_urls = last_10_urls(@insta_user_id)
@@ -56,8 +54,10 @@ class HandlesController < ApplicationController
 		@type = type(@insta_user_id)
 		@top_likers = top_likers(@insta_user_id)
 		@timeframe = (timeframe(@insta_user_id)).round(2)
-		@velocity = (@timeframe/10).round(2)
-		@number_of_photos = number_of_photos(@insta_user_id)
+		@number_of_photos = number_of_photos(@insta_user_id).to_f
+		@average_comments_photo = ((@total_comments)/@number_of_photos)
+		@average_likes_per_photo = ((@total_likes)/@number_of_photos)
+		@velocity = (@timeframe/@number_of_photos).round(2)
 
 		#people you follow
 		#@people_you_follow = find_people_you_follow(@insta_user_id)
