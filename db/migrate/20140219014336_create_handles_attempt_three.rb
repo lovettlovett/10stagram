@@ -1,6 +1,6 @@
-class CreateHandlesTable < ActiveRecord::Migration
+class CreateHandlesAttemptThree < ActiveRecord::Migration
   def change
-    create_table :handles_tables do |t|
+    create_table :handles do |t|
     	t.string :handle
     	t.references :user
     	t.timestamps
