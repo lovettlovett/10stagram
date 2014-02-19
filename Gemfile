@@ -46,6 +46,8 @@ gem 'rails_12factor', group: :production
 
 gem 'prawn'
 
+gem 'annotate'
+
 # Use unicorn as the app server
 # gem 'unicorn'
 

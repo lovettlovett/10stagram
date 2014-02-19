@@ -1,7 +1,7 @@
 <h1>Add a Handle to Battle!</h1>
 
 
-<form action="<%=user_handle_battles(@handle.user_id, @handle.id)%>" method="POST">
+<form action="<%=user_handle_battles_path[@user.id, @handle.id]%>" method="POST">
 	<input name="authenticity_token" type="hidden" value="<%=form_authenticity_token%>"/>
 
 	<label>
