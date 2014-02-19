@@ -1,5 +1,5 @@
 <h1>Battles Index</h1>
 <h3><%@battles.each do |battle|%>
-<li><%= battle.versus_handle %></li>
+<li><%= link_to( battle.versus_handle, user_handle_battle_path(@user.id, @handle.id, battle.id)) %></li>
 <%end%>
 </h3>

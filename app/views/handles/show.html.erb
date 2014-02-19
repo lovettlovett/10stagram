@@ -1,6 +1,10 @@
 <h1><%=@handle.handle%></h1>
 <%= form_tag user_handle_path(@handle.user_id, @handle.id), method: "delete" do%>
 <%= submit_tag("Delete Handle")%>
+<a href="/users/<%=@handle.user_id%>/handles/<%=@handle.id%>/battles/new">add battle</a> • <a href="/users/<%=@handle.user_id%>/handles/<%=@handle.id%>/battles">view battles</a>
+
+
+
 <%end%>
 
 
