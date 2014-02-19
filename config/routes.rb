@@ -9,4 +9,5 @@ InstarankApp::Application.routes.draw do
   delete "/session", to: "session#destroy"
 
   root "welcome#index"
+
 end

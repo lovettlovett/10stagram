@@ -1,4 +1,8 @@
 <h1><%=@handle.handle%></h1>
+<%= form_tag user_handle_path(@handle.user_id, @handle.id), method: "delete" do%>
+<%= submit_tag("Delete Handle")%>
+<%end%>
+
 
 <h2><em>Profile Details</em></h2>
 
@@ -124,10 +128,12 @@
 	</ul>
 
 <h3>Most Recent Images:<br>
+
 	<%@image_urls.each do |url| %>
 	<img src="<%=url%>" width="200px">
 	<%end%>
 </h3>
+
 
 
 

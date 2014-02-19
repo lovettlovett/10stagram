@@ -65,6 +65,13 @@ class HandlesController < ApplicationController
 		render(:show)
 	end
 
+	def destroy
+		@user = User.find_by_id(params[:user_id])
+		@handle = Handle.find_by_id(params[:id])
+		@handle.destroy
+		redirect_to user_handles_path(@user)
+	end
+
 	def find_insta_user_id(username)
 	
 		search_url = "https://api.instagram.com/v1/users/search?q=#{username}&client_id=#{INSTAGRAM_CLIENT_ID}"
@@ -115,15 +122,6 @@ class HandlesController < ApplicationController
 			end
 
 		return array
-	end
-
-	def find_insta_user_id(username)
-		search_url = "https://api.instagram.com/v1/users/search?q=#{username}&client_id=#{INSTAGRAM_CLIENT_ID}"
-
-		from_instagram = HTTParty.get(search_url)
-
-		insta_user_id = from_instagram["data"][0]["id"]
-		return insta_user_id
 	end
 
 	def friends_hash(user_id)
@@ -390,9 +388,3 @@ class HandlesController < ApplicationController
 	end
 
 end
-
-
-
-
-
-

@@ -44,6 +44,8 @@ gem 'pry-rails', group: [:development, :test]
 
 gem 'rails_12factor', group: :production
 
+gem 'prawn'
+
 # Use unicorn as the app server
 # gem 'unicorn'
 
