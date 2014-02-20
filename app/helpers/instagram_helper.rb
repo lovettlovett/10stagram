@@ -9,25 +9,20 @@ module InstagramHelper
     return insta_user_id
   end
 
-  def profile_stats(user_id)
-
+  def user_id_request(user_id)
     search_url = "https://api.instagram.com/v1/users/#{user_id}?client_id=#{INSTAGRAM_CLIENT_ID}"
-
     from_instagram = HTTParty.get(search_url)
-    
+    return from_instagram
+  end
+
+  def profile_stats(user_id)
     #outputs – {"media"=>201, "followed_by"=>217, "follows"=>138}
-    counts = from_instagram["data"]["counts"]
+    counts = user_id_request(user_id)["data"]["counts"]
     return counts
   end
 
   def profile_attributes(user_id)
-
-    search_url = "https://api.instagram.com/v1/users/#{user_id}?client_id=#{INSTAGRAM_CLIENT_ID}"
-
-    from_instagram = HTTParty.get(search_url)
-    
-    #outputs – {"media"=>201, "followed_by"=>217, "follows"=>138}
-    data = from_instagram["data"]
+    data = user_id_request(user_id)["data"]
     return data
   end
 
@@ -38,17 +33,11 @@ module InstagramHelper
 
     from_instagram = HTTParty.get(search_url)
 
-    number_of_friends = from_instagram["data"].size
+    users_you_follow = from_instagram["data"].map do |user|
+      user["username"]
+    end
 
-    array = []
-    i = 0
-      while i < number_of_friends
-        users_you_follow = from_instagram["data"][i]["username"]
-        array.push(users_you_follow)
-        i = i + 1
-      end
-
-    return array
+    return users_you_follow
   end
 
   def friends_hash(user_id)
@@ -61,14 +50,6 @@ module InstagramHelper
     user_ids = people_you_follow.map do |person|
       find_insta_user_id(person)
     end
-
-    # #return an array of profile stats
-    # number_of_photos = user_ids.select do |id| 
-    #   #next if profile_stats(id) == nil
-    #   profile_stats(id)
-    # end
-
-    # number_of_photos = number_of_photos.compact!
 
     return user_ids
   end
@@ -91,14 +72,9 @@ module InstagramHelper
 
   def last_10_urls(user_id)
     from_instagram = retrieve_last_10_photos(user_id)
-    array_of_image_urls = []
-    number_of_photos = from_instagram["data"].size
 
-    i = 0
-    while i < number_of_photos
-      standard_resolution_url = from_instagram["data"][i]["images"]["standard_resolution"]["url"]
-      array_of_image_urls = array_of_image_urls.push(standard_resolution_url)
-      i = i + 1
+    array_of_image_urls = from_instagram["data"].map do |datum|
+      datum["images"]["standard_resolution"]["url"]
     end
 
     return array_of_image_urls
@@ -150,13 +126,9 @@ module InstagramHelper
   #return a sum of all likes from the users' last 10 photos
   def likes(user_id)
     from_instagram = retrieve_last_10_photos(user_id)
-    number_of_photos = from_instagram["data"].size
-    all_likes = Array.new
-    i = 0
-    while i < number_of_photos
-      likes = from_instagram["data"][i]["likes"]["count"]
-      all_likes.push(likes)
-      i = i + 1
+
+    all_likes = from_instagram["data"].map do |datum|
+      datum["likes"]["count"]
     end
 
     all_likes = all_likes.reduce(:+)
@@ -203,14 +175,9 @@ module InstagramHelper
 
   def filter(user_id)
     from_instagram = retrieve_last_10_photos(user_id)
-    number_of_photos = from_instagram["data"].size
-    array_of_filters = []
-    i = 0
 
-    while i < number_of_photos
-      filter = from_instagram["data"][i]["filter"]
-      array_of_filters = array_of_filters.push(filter)
-      i = i + 1
+    array_of_filters = from_instagram["data"].map do |datum|
+      datum["filter"]
     end
 
     b = Hash.new(0)
@@ -231,15 +198,9 @@ module InstagramHelper
 
   def type(user_id)
     from_instagram = retrieve_last_10_photos(user_id)
-    number_of_photos = from_instagram["data"].size
 
-    array_of_types = []
-    i = 0
-
-    while i < number_of_photos
-      type = from_instagram["data"][i]["type"]
-      array_of_types = array_of_types.push(type)
-      i = i + 1
+    array_of_types = from_instagram["data"].map do |datum|
+      datum["type"]
     end
 
     b = Hash.new(0)
@@ -257,12 +218,12 @@ module InstagramHelper
   def timeframe(user_id)
     from_instagram = retrieve_last_10_photos(user_id)
     number_of_photos = from_instagram["data"].size.to_i
-    #binding.pry
+
+    #find time of the most recent photo & oldest photo
     most_recent_photo = (from_instagram["data"][0]["created_time"]).to_i
     oldest_photo = (from_instagram["data"][(number_of_photos - 1)]["created_time"]).to_i
 
-
-
+    #convert time
     most_recent_photo_time = Time.at(most_recent_photo)
     oldest_photo_time = Time.at(oldest_photo)
 
@@ -279,19 +240,13 @@ module InstagramHelper
 
     return days
 
-
   end
 
   def comments(user_id)
     from_instagram = retrieve_last_10_photos(user_id)
-    number_of_photos = from_instagram["data"].size
 
-    all_comments = Array.new
-    i = 0
-    while i < number_of_photos
-      comments = from_instagram["data"][i]["comments"]["count"]
-      all_comments.push(comments)
-      i = i + 1
+    all_comments = from_instagram["data"].map do |datum|
+      datum["comments"]["count"]
     end
 
     all_comments = all_comments.reduce(:+)
