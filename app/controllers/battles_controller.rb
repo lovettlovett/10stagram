@@ -2,7 +2,6 @@ class BattlesController < ApplicationController
 	def index
 		@user = User.find_by_id(params[:user_id])
 		@handle = Handle.find_by_id(params[:handle_id])
-		@battle = Battle.find_by_id(params[:id])
 		@battles = Battle.where(handle_id: params[:handle_id])
 		render(:index)
 	end
