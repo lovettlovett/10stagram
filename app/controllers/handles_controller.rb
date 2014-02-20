@@ -240,37 +240,23 @@ class HandlesController < ApplicationController
 	#a method to find all the unique users who have liked one of your photos
 	def all_likers(user_id)
 		from_instagram = retrieve_last_10_photos(user_id)
-		number_of_photos = from_instagram["data"].size
-		media_ids = []
-		i = 0
-		while i < number_of_photos 
-			type = from_instagram["data"][i]["id"]
-			media_ids.push(type)
-			i = i + 1
-		end
 
-		likers_results = media_ids.map do |media_id|
+		media_ids = from_instagram["data"].map { |picture| picture["id"] }
+			
+		likes = media_ids.map do |media_id|
 			search_url = "https://api.instagram.com/v1/media/#{media_id}/likes?client_id=#{INSTAGRAM_CLIENT_ID}"
-			likers = HTTParty.get(search_url)
+			HTTParty.get(search_url)
 		end
 
-		all_likers = Array.new
-		likers_per_photo = Array.new
-	
-		# changed this to number_of_photos, make sure that still works
-		i = 0
-		while i < number_of_photos
-			x = 0
-			likes_per_photo = likers_results[i]["data"].size
-			while x < likes_per_photo
-				each_user_who_likes_photo = likers_results[i]["data"][x]["username"]
-				all_likers = likers_per_photo.push(each_user_who_likes_photo)
-				x = x + 1
+		likers_usernames = []
+		
+		likes.each do |photo_likes|
+			photo_likes["data"].each do |like|
+				likers_usernames << like["username"]
 			end
-			i = i + 1
 		end
 
-		return all_likers
+		return likers_usernames
 	end
 
 	def top_likers(user_id)
